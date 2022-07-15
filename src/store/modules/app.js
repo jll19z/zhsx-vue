@@ -1,6 +1,6 @@
 import { login as loginApi } from '@/api/login'
 import router from '@/router'
-// import { setTokenTime } from '@/utils/auth'
+import { setTokenTime } from '@/utils/auth'
 export default {
   namespaced: true,
   state: () => ({
@@ -16,7 +16,7 @@ export default {
     changeSiderType(state) {
       state.siderType = !state.siderType
     },
-    changLang(state, lang) {
+    changLang (state, lang) {
       state.lang = lang
     }
   },
@@ -27,7 +27,7 @@ export default {
           .then((res) => {
             console.log(res)
             commit('setToken', res.token)
-            // setTokenTime()
+            setTokenTime()
             router.replace('/')
             resolve()
           })

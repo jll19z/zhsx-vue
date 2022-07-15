@@ -7,6 +7,7 @@
     text-color="#fff"
     router
     unique-opened
+    :collapse="!$store.getters.siderType"
   >
     <el-sub-menu
       :index="item.id"
@@ -40,6 +41,7 @@
 import { menuList } from '@/api/menu'
 import { ref } from 'vue'
 import variables from '@/styles/variables.scss'
+
 const iconList = ref(['user', 'setting', 'shop', 'tickets', 'pie-chart'])
 const icon = ref('menu')
 
@@ -48,8 +50,11 @@ const menusList = ref([])
 const initMenusList = async () => {
   menusList.value = await menuList()
 }
-
 initMenusList()
+
+const savePath = (path) => {
+  sessionStorage.setItem('path', `/${path}`)
+}
 </script>
 
 <style lang="scss" scoped></style>

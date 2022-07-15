@@ -1,74 +1,73 @@
 <template>
   <div class="login-container">
-    <el-form
-      ref="formRef"
-      :model="loginForm"
-      class="login-form"
-      autocomplete="on"
-      :rules="rules"
-    >
+    <el-form ref="formRef" :model="form" class="login-form" :rules="rules">
       <div class="title-container">
-        <h3 class="title">后台登录</h3>
+        <h3 class="title">{{ $t('login.title') }}</h3>
       </div>
       <el-form-item prop="username">
-        <!-- <el-icon :size="20" class="svg-container">
-          <Edit />
-        </el-icon> -->
         <svg-icon icon="user" class="svg-container"></svg-icon>
-        <el-input v-model="loginForm.username" />
+        <el-input v-model="form.username"></el-input>
       </el-form-item>
       <el-form-item prop="password">
-        <!-- <el-icon :size="20" class="svg-container">
-          <Edit />
-        </el-icon> -->
         <svg-icon icon="password" class="svg-container"></svg-icon>
-        <el-input v-model="loginForm.password" type="password" />
-        <svg-icon icon="eye"></svg-icon>
+        <el-input v-model="form.password" :type="passwordType"></el-input>
+        <svg-icon
+          :icon="passwordType === 'password' ? 'eye' : 'eye-open'"
+          @click="changeType"
+        ></svg-icon>
       </el-form-item>
-      <el-button type="primary" class="login-button" @click="handleLogin"
-        >登录</el-button
-      >
+      <el-button type="primary" class="login-button" @click="handleLogin">{{
+        $t('login.btnTitle')
+      }}</el-button>
     </el-form>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
-//  import { Edit } from '@element-plus/icons-vue'
-// import { login } from '@/api/login'
 import { useStore } from 'vuex'
 const store = useStore()
-const loginForm = ref({
-  name: '',
-  password: ''
+const form = ref({
+  username: 'admin',
+  password: '123456'
 })
 
 const rules = ref({
   username: [
     {
       required: true,
-      message: '请输入用户名',
-      tigger: 'blur'
+      message: 'Please input Activity name',
+      trigger: 'blur'
     }
   ],
   password: [
     {
       required: true,
-      message: '请输入密码',
-      tigger: 'blur'
+      message: 'Please input Activity name',
+      trigger: 'blur'
     }
   ]
 })
+
 const formRef = ref(null)
 const handleLogin = () => {
   formRef.value.validate(async (valid) => {
     if (valid) {
-      // const res = await login(loginForm.value)
-      // console.log(res)
-      store.dispatch('app/login', loginForm.value)
+      store.dispatch('app/login', form.value)
     } else {
+      console.log('error submit!!')
+      return false
     }
   })
+}
+
+const passwordType = ref('password')
+const changeType = () => {
+  if (passwordType.value === 'password') {
+    passwordType.value = 'text'
+  } else {
+    passwordType.value = 'password'
+  }
 }
 </script>
 

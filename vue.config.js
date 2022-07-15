@@ -1,4 +1,3 @@
-
 const AutoImport = require('unplugin-auto-import/webpack')
 const Components = require('unplugin-vue-components/webpack')
 const { ElementPlusResolver } = require('unplugin-vue-components/resolvers')
@@ -9,13 +8,17 @@ function resolve(dir) {
 }
 const webpack = require('webpack')
 module.exports = {
-  configureWebpack: config => {
-    config.plugins.push(AutoImport({
-      resolvers: [ElementPlusResolver()],
-    }))
-    config.plugins.push(Components({
-      resolvers: [ElementPlusResolver()],
-    }))
+  configureWebpack: (config) => {
+    config.plugins.push(
+      AutoImport({
+        resolvers: [ElementPlusResolver()]
+      })
+    )
+    config.plugins.push(
+      Components({
+        resolvers: [ElementPlusResolver()]
+      })
+    )
   },
   chainWebpack(config) {
     // 设置 svg-sprite-loader
@@ -50,9 +53,7 @@ module.exports = {
       .end()
     config
       .plugin('ignore')
-      .use(
-        new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /zh-cn$/)
-      )
+      .use(new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /zh-cn$/))
     config.module
       .rule('icons')
       .test(/\.svg$/)
@@ -81,8 +82,8 @@ module.exports = {
   css: {
     loaderOptions: {
       sass: {
-         prependData:   // 8版本用prependData: 
-        `
+        // 8版本用prependData:
+        prependData: `
           @import "@/styles/variables.scss";  // scss文件地址
           @import "@/styles/mixin.scss";     // scss文件地址
         `
