@@ -10,9 +10,9 @@
     :collapse="!$store.getters.siderType"
   >
     <el-sub-menu
-      :index="item.id"
+      :index="item.menuId"
       v-for="(item, index) in menusList"
-      :key="item.id"
+      :key="item.menuId"
     >
       <template #title>
         <el-icon>
@@ -21,16 +21,16 @@
         <span>{{ item.authName }}</span>
       </template>
       <el-menu-item
-        :index="'/' + it.path"
+        :index="'/' + it.menuPath"
         v-for="it in item.children"
-        :key="it.id"
-        @click="savePath(it.path)"
+        :key="it.menuId"
+        @click="savePath(it.menuPath)"
       >
         <template #title>
           <el-icon>
             <component :is="icon"></component>
           </el-icon>
-          <span>{{ $t(`menus.${it.path}`) }}</span>
+          <span>{{ it.authName }}</span>
         </template>
       </el-menu-item>
     </el-sub-menu>
@@ -48,7 +48,9 @@ const icon = ref('menu')
 const defaultActive = ref(sessionStorage.getItem('path') || '/users')
 const menusList = ref([])
 const initMenusList = async () => {
-  menusList.value = await menuList()
+  const res = await menuList()
+  console.log(res.menu)
+  menusList.value = res.menu
 }
 initMenusList()
 

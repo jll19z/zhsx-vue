@@ -4,7 +4,7 @@ import { diffTokenTime } from '@/utils/auth'
 import store from '@/store'
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API,
-  timeout: 5000
+  timeout: 50000
 })
 
 service.interceptors.request.use(
@@ -15,7 +15,7 @@ service.interceptors.request.use(
         return Promise.reject(new Error('token 失效了'))
       }
     }
-    config.headers.Authorization = localStorage.getItem('token')
+    config.headers.token = localStorage.getItem('token')
     return config
   },
   (error) => {
@@ -25,12 +25,18 @@ service.interceptors.request.use(
 
 service.interceptors.response.use(
   (response) => {
-    const { data, meta } = response.data
-    if (meta.status === 200 || meta.status === 201) {
+    // console.log('---------------------')
+    // console.log(response.data)
+    // console.log('---------------------')
+    const { data, code, message } = response.data
+    // console.log('---------------------')
+    // console.log(response.data)
+    // console.log('---------------------')
+    if (code === 20000) {
       return data
     } else {
-      ElMessage.error(meta.msg)
-      return Promise.reject(new Error(meta.msg))
+      ElMessage.error(message)
+      return Promise.reject(new Error(message))
     }
   },
   (error) => {

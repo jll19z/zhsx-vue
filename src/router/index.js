@@ -18,39 +18,39 @@ const routes = [
         component: () => import('@/views/users/index.vue')
       },
       {
-        path: 'categories',
-        name: 'categories',
-        component: () => import('@/views/categories/index.vue')
+        path: 'product',
+        name: 'product',
+        component: () => import('@/views/product/index.vue')
       },
       {
-        path: 'goods',
-        name: 'goods',
-        component: () => import('@/views/goods/index.vue')
+        path: 'productadd',
+        name: 'productadd',
+        component: () => import('@/views/product/add.vue')
       },
       {
-        path: 'orders',
-        name: 'orders',
-        component: () => import('@/views/orders/index.vue')
+        path: 'tab',
+        name: 'tab',
+        component: () => import('@/views/productTab/index.vue')
       },
       {
-        path: 'params',
-        name: 'params',
-        component: () => import('@/views/params/index.vue')
+        path: 'tabadd',
+        name: 'tabadd',
+        component: () => import('@/views/productTab/add.vue')
       },
       {
-        path: 'reports',
-        name: 'reports',
-        component: () => import('@/views/reports/index.vue')
+        path: 'master',
+        name: 'master',
+        component: () => import('@/views/orders/master.vue')
       },
       {
-        path: 'rights',
-        name: 'rights',
-        component: () => import('@/views/rights/index.vue')
+        path: 'detail',
+        name: 'detail',
+        component: () => import('@/views/orders/detail.vue')
       },
       {
-        path: 'roles',
-        name: 'roles',
-        component: () => import('@/views/roles/index.vue')
+        path: 'banner',
+        name: 'banner',
+        component: () => import('@/views/banner/index.vue')
       }
     ]
   }
