@@ -26,6 +26,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useStore } from 'vuex'
+
 const store = useStore()
 const form = ref({
   username: 'admin',
@@ -36,14 +37,14 @@ const rules = ref({
   username: [
     {
       required: true,
-      message: 'Please input Activity name',
+      message: '请输入账号',
       trigger: 'blur'
     }
   ],
   password: [
     {
       required: true,
-      message: 'Please input Activity name',
+      message: '请输入密码',
       trigger: 'blur'
     }
   ]
@@ -53,7 +54,7 @@ const formRef = ref(null)
 const handleLogin = () => {
   formRef.value.validate(async (valid) => {
     if (valid) {
-      store.dispatch('app/login', form.value)
+      await store.dispatch('app/login', form.value)
     } else {
       console.log('error submit!!')
       return false
