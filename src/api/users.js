@@ -7,3 +7,26 @@ export const getUser = (page, limit, query) => {
     data: query
   })
 }
+
+export const AddUser = (userBody) => {
+  return request({
+    url: '/zhsx/user/save',
+    method: 'POST',
+    data: userBody
+  })
+}
+
+export const UserUpdateById = (userBody) => {
+  return request({
+    url: '/zhsx/user/updateById',
+    method: 'POST',
+    data: userBody
+  })
+}
+
+export const UserDeleteById = (id) => {
+  return request({
+    url: `/zhsx/user/delete/+${id}`,
+    method: 'DELETE'
+  })
+}

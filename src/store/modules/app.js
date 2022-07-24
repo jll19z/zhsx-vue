@@ -1,6 +1,7 @@
 import { login as loginApi } from '@/api/login'
 import router from '@/router'
 import { setTokenTime } from '@/utils/auth'
+
 export default {
   namespaced: true,
   state: () => ({

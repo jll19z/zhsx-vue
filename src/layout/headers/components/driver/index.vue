@@ -11,6 +11,7 @@ import { onMounted } from 'vue'
 import { steps } from './steps'
 import { watchLang } from '@/i18n/watchlang'
 import i18n from '@/i18n'
+
 const t = i18n.global.t
 let driver
 onMounted(() => {

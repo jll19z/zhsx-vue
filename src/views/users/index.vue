@@ -11,7 +11,7 @@
       <el-button type="primary" :icon="Search" @click="initGetUser"
         >搜索</el-button
       >
-      <el-button type="primary" @click="HandleDialog">添加</el-button>
+      <el-button type='primary' @click='HandleDialog(row)'>添加</el-button>
       <el-button type="primary" @click="resetForm">重置</el-button>
     </el-row>
 
@@ -21,20 +21,30 @@
         :prop="item.prop"
         :label="item.label"
         v-for="(item, index) in options"
-        :key="index"
+        :key='index'
       >
-        <template v-slot="{ row }" v-if="item.prop === 'mg_state'">
-          <el-switch v-model="row.mg_state"></el-switch>
+        <template v-slot='{ row }' v-if="item.prop === 'mg_state'">
+          <el-switch v-model='row.mg_state'></el-switch>
         </template>
 
-        <template v-slot="{ row }" v-else-if="item.prop === 'avatar'">
-          <img :src="row.avatar" width="100" height="100" />
+        <template v-slot='{ row }' v-else-if="item.prop === 'avatar'">
+          <img :src='row.avatar' width='100' height='100' />
         </template>
 
-        <template #default v-else-if="item.prop === 'actions'">
-          <el-button type="success" size="small" :icon="Edit"></el-button>
-          <el-button type="warning" size="small" :icon="Setting"></el-button>
-          <el-button type="danger" size="small" :icon="Delete"></el-button>
+        <template v-else-if="item.prop === 'actions'" #default='{ row }'>
+          <el-button
+            :icon='Edit'
+            size='small'
+            type='success'
+            @click='HandleDialog(row)'
+          ></el-button>
+          <el-button type='warning' size='small' :icon='Setting'></el-button>
+          <el-button
+            :icon='Delete'
+            size='small'
+            type='danger'
+            @click='DeleteUser(row.id)'
+          ></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -42,36 +52,50 @@
     <el-pagination
       v-model:currentPage="queryForm.pagenum"
       v-model:page-size="queryForm.pagesize"
-      :page-sizes="[5, 10, 15, 20]"
-      :small="small"
-      :disabled="disabled"
-      :background="background"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="total"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
+      :page-sizes='[5, 10, 15, 20]'
+      :small='small'
+      :disabled='disabled'
+      :background='background'
+      layout='total, sizes, prev, pager, next, jumper'
+      :total='total'
+      @size-change='handleSizeChange'
+      @current-change='handleCurrentChange'
     />
   </el-card>
-  <Dialog v-model="dialogVisible" />
+  <Dialog
+    v-model='dialogVisible'
+    :dialogTableValue='dialogTableValue'
+    :dialogTitle='dialogTitle'
+    @initGetUser='initGetUser'
+  />
 </template>
 
 <script setup>
 import { ref } from 'vue'
-import { Search, Edit, Setting, Delete } from '@element-plus/icons-vue'
-import { getUser } from '@/api/users'
+import { Delete, Edit, Search, Setting } from '@element-plus/icons-vue'
+import { getUser, UserDeleteById } from '@/api/users'
 import { options } from './options'
 import Dialog from './components/dialog.vue'
-const pagenum = ref(1)
-const pagesize = ref(5)
+import { ElMessage, ElMessageBox } from 'element-plus'
+
+const pagenum = ref(0)
+const pagesize = ref(10)
 const total = ref(0)
 const queryForm = ref({})
 
 const dialogVisible = ref(false)
+const dialogTitle = ref('')
 const tableData = ref([])
+
+const dialogTableValue = ref({})
 
 const initGetUser = async () => {
   const res = await getUser(pagenum.value, pagesize.value, queryForm.value)
   console.log(res)
+  console.log('init----------------------------')
+  console.log('init----------------------------')
+  console.log('init----------------------------')
+  console.log('init----------------------------')
   tableData.value = res.rows
   total.value = res.total
 }
@@ -86,13 +110,47 @@ const handleCurrentChange = (pageNum) => {
   pagenum.value = pageNum
   initGetUser()
 }
-const HandleDialog = () => {
-  dialogVisible.value = true
+const HandleDialog = (row) => {
+  console.log(row)
+  if (row) {
+    dialogTitle.value = '编辑用户'
+    dialogTableValue.value = JSON.parse(JSON.stringify(row))
+    console.log(dialogTableValue.value)
+    dialogVisible.value = true
+  } else {
+    dialogTitle.value = '添加用户'
+    dialogTableValue.value = {}
+    dialogVisible.value = true
+  }
 }
 const resetForm = () => {
   queryForm.value = {}
   initGetUser()
 }
+const DeleteUser = async (id) => {
+  // console.log(id)
+
+  ElMessageBox.confirm('确定删除吗，删除后无法恢复', {
+    confirmButtonText: 'OK',
+    cancelButtonText: 'Cancel',
+    type: 'warning'
+  })
+    .then(async () => {
+      await UserDeleteById(id)
+      initGetUser()
+      ElMessage({
+        type: 'success',
+        message: '删除成功'
+      })
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '操作取消'
+      })
+    })
+}
+initGetUser()
 </script>
 
 <style lang="scss" scoped>

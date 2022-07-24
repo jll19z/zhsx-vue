@@ -37,7 +37,7 @@ const rules = ref({
   username: [
     {
       required: true,
-      message: '请输入账号',
+      message: '请输入用户名',
       trigger: 'blur'
     }
   ],
@@ -54,7 +54,7 @@ const formRef = ref(null)
 const handleLogin = () => {
   formRef.value.validate(async (valid) => {
     if (valid) {
-      await store.dispatch('app/login', form.value)
+      store.dispatch('app/login', form.value)
     } else {
       console.log('error submit!!')
       return false

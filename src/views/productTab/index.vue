@@ -1,6 +1,6 @@
 <!--  -->
 <template>
-  <div class="">今天摸鱼 ^-^ push一下 打个卡</div>
+  <div class=''></div>
 </template>
 
 <script setup></script>
