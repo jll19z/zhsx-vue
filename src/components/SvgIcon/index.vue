@@ -5,8 +5,7 @@
 </template>
 
 <script setup>
-import { computed, defineProps } from 'vue'
-
+import { defineProps, computed } from 'vue'
 const props = defineProps({
   icon: {
     type: String,

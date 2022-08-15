@@ -18,8 +18,8 @@ export const options = [
   },
 
   {
-    label: '权限',
-    prop: 'power'
+    label: '职位',
+    prop: 'positions'
   },
   {
     label: '创建时间',

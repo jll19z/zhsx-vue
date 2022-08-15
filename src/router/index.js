@@ -22,21 +22,17 @@ const routes = [
         name: 'product',
         component: () => import('@/views/product/index.vue')
       },
-      {
-        path: 'productadd',
-        name: 'productadd',
-        component: () => import('@/views/product/add.vue')
-      },
+
       {
         path: 'tab',
         name: 'tab',
         component: () => import('@/views/productTab/index.vue')
       },
-      {
-        path: 'tabadd',
-        name: 'tabadd',
-        component: () => import('@/views/productTab/add.vue')
-      },
+      // {
+      //   path: 'tabadd',
+      //   name: 'tabadd',
+      //   component: () => import('@/views/productTab/add.vue')
+      // },
       {
         path: 'master',
         name: 'master',

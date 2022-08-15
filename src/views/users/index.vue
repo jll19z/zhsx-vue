@@ -11,7 +11,7 @@
       <el-button type="primary" :icon="Search" @click="initGetUser"
         >搜索</el-button
       >
-      <el-button type='primary' @click='HandleDialog(row)'>添加</el-button>
+      <el-button type="primary" @click="HandleDialog(row)">添加</el-button>
       <el-button type="primary" @click="resetForm">重置</el-button>
     </el-row>
 
@@ -21,29 +21,29 @@
         :prop="item.prop"
         :label="item.label"
         v-for="(item, index) in options"
-        :key='index'
+        :key="index"
       >
-        <template v-slot='{ row }' v-if="item.prop === 'mg_state'">
-          <el-switch v-model='row.mg_state'></el-switch>
+        <template v-slot="{ row }" v-if="item.prop === 'mg_state'">
+          <el-switch v-model="row.mg_state"></el-switch>
         </template>
 
-        <template v-slot='{ row }' v-else-if="item.prop === 'avatar'">
-          <img :src='row.avatar' width='100' height='100' />
+        <template v-slot="{ row }" v-else-if="item.prop === 'avatar'">
+          <img :src="row.avatar" width="100" height="100" />
         </template>
 
-        <template v-else-if="item.prop === 'actions'" #default='{ row }'>
+        <template #default="{ row }" v-else-if="item.prop === 'actions'">
           <el-button
-            :icon='Edit'
-            size='small'
-            type='success'
-            @click='HandleDialog(row)'
+            type="success"
+            size="small"
+            :icon="Edit"
+            @click="HandleDialog(row)"
           ></el-button>
-          <el-button type='warning' size='small' :icon='Setting'></el-button>
+          <!-- <el-button type="warning" size="small" :icon="Setting"></el-button> -->
           <el-button
-            :icon='Delete'
-            size='small'
-            type='danger'
-            @click='DeleteUser(row.id)'
+            type="danger"
+            size="small"
+            :icon="Delete"
+            @click="DeleteUser(row.id)"
           ></el-button>
         </template>
       </el-table-column>
@@ -52,32 +52,31 @@
     <el-pagination
       v-model:currentPage="queryForm.pagenum"
       v-model:page-size="queryForm.pagesize"
-      :page-sizes='[5, 10, 15, 20]'
-      :small='small'
-      :disabled='disabled'
-      :background='background'
-      layout='total, sizes, prev, pager, next, jumper'
-      :total='total'
-      @size-change='handleSizeChange'
-      @current-change='handleCurrentChange'
+      :page-sizes="[5, 10, 15, 20]"
+      :small="small"
+      :disabled="disabled"
+      :background="background"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="total"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
     />
   </el-card>
   <Dialog
-    v-model='dialogVisible'
-    :dialogTableValue='dialogTableValue'
-    :dialogTitle='dialogTitle'
-    @initGetUser='initGetUser'
+    v-model="dialogVisible"
+    :dialogTitle="dialogTitle"
+    :dialogTableValue="dialogTableValue"
+    @initGetUser="initGetUser"
   />
 </template>
 
 <script setup>
 import { ref } from 'vue'
-import { Delete, Edit, Search, Setting } from '@element-plus/icons-vue'
+import { Search, Edit, Delete } from '@element-plus/icons-vue'
 import { getUser, UserDeleteById } from '@/api/users'
 import { options } from './options'
 import Dialog from './components/dialog.vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-
 const pagenum = ref(0)
 const pagesize = ref(10)
 const total = ref(0)
@@ -92,10 +91,10 @@ const dialogTableValue = ref({})
 const initGetUser = async () => {
   const res = await getUser(pagenum.value, pagesize.value, queryForm.value)
   console.log(res)
-  console.log('init----------------------------')
-  console.log('init----------------------------')
-  console.log('init----------------------------')
-  console.log('init----------------------------')
+  // console.log('init----------------------------')
+  // console.log('init----------------------------')
+  // console.log('init----------------------------')
+  // console.log('init----------------------------')
   tableData.value = res.rows
   total.value = res.total
 }

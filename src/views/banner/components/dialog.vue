@@ -9,41 +9,28 @@
       ref="ruleFormRef"
       :model="ruleForm"
       :rules="rules"
-      label-width="70px"
+      label-width="90px"
       class="demo-ruleForm"
       :size="formSize"
       status-icon
     >
-      <el-form-item label="用户名" prop="username">
-        <el-input v-model="ruleForm.username" />
+      <el-form-item label="轮播图信息" prop="bannerInfo">
+        <el-input v-model="ruleForm.tabTypename" />
       </el-form-item>
-      <el-form-item label="密码" prop="password">
-        <el-input v-model="ruleForm.password" />
+      <el-form-item label="显示优先级" prop="bannerRank">
+        <el-input v-model="ruleForm.bannerRank" />
       </el-form-item>
-      <el-form-item label="头像" prop="avatar">
+
+      <el-form-item label="图片" prop="tabImg">
         <el-upload
           class="avatar-uploader"
           action="http://localhost:9090/fileoss/upload"
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
         >
-          <img v-if="imageUrl" :src="imageUrl" />
+          <img v-if="imageUrl" :src="imageUrl" class="avatar" />
           <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
         </el-upload>
-      </el-form-item>
-      <el-form-item label="权限" prop="positions">
-        <el-select
-          v-model="ruleForm.positions"
-          class="m-2"
-          placeholder="Select"
-        >
-          <el-option
-            v-for="item in SelectList"
-            :key="item.id"
-            :label="item.positionName"
-            :value="item.id"
-          />
-        </el-select>
       </el-form-item>
     </el-form>
     <template #footer>
@@ -57,20 +44,15 @@
 
 <script setup>
 import { defineEmits, ref, defineProps, watch, toRaw } from 'vue'
-import { positionList } from '@/api/UserPositon'
-import { AddUser, UserUpdateById } from '@/api/users'
-
-const emits = defineEmits(['update:modelValue', 'initGetUser'])
+import { AddBanner, UpdateBannerById } from '@/api/banner'
+const emits = defineEmits(['update:modelValue', 'initGetBanner'])
 const ruleFormRef = ref(null)
+const imageUrl = ref('')
 const ruleForm = ref({
-  id: '',
-  username: '',
-  password: '',
-  avatar: '',
-  positions: ''
+  tabTypename: '',
+  tabRank: '',
+  tabImg: ''
 })
-
-const saveOrUpdate = ref('0')
 
 const props = defineProps({
   dialogTitle: {
@@ -90,59 +72,42 @@ const handleClose = () => {
   imageUrl.value = '' // 上传的图片在取消添加后清除
   emits('update:modelValue', false)
 }
-// 获取职位列表 渲染在select选择器
-const SelectList = ref({})
-const getPositionList = async () => {
-  const res = await positionList()
-  // console.log(res.plist)
-  SelectList.value = res.plist
-}
-getPositionList()
-// 定义图片回显变量imageUrl 图片上传成功 回显图片
-const imageUrl = ref('')
 // 上传图片成功回调函数
 const handleAvatarSuccess = (res) => {
   // console.log(res.data.url)
   imageUrl.value = res.data.url
-  ruleForm.value.avatar = res.data.url
+  ruleForm.value.bannerImg = res.data.url
 }
 
 const handleOk = async () => {
   console.log(ruleForm)
-  if (ruleForm.value.id) {
+  if (ruleForm.value.tabType) {
     console.log('update')
     // console.log(ruleForm.value.positions)
-    await UserUpdateById(ruleForm.value)
+    await UpdateBannerById(ruleForm.value)
   } else {
     console.log('add')
-    await AddUser(ruleForm.value)
+    await AddBanner(ruleForm.value)
   }
-
+  console.log('----5555555555555')
+  emits('initGetBanner')
+  console.log('----5555555555555')
   handleClose()
-  emits('initGetUser')
 }
 
 watch(
   () => props.dialogTableValue,
   () => {
     const ValueObj = toRaw(props.dialogTableValue)
-    imageUrl.value = ValueObj.avatar
-    saveOrUpdate.value = 1
+    console.log('ValueObj')
+    console.log(ValueObj)
+    imageUrl.value = ValueObj.bannerImg
     ruleForm.value = props.dialogTableValue
-    console.log('-------------')
     console.log(ruleForm.value)
-    console.log('-------------')
   },
   { deep: true, immediate: true }
 )
 </script>
-<style scoped>
-.avatar-uploader .avatar {
-  width: 178px;
-  height: 178px;
-  display: block;
-}
-</style>
 
 <style>
 .avatar-uploader .el-upload {
@@ -151,7 +116,12 @@ watch(
   cursor: pointer;
   position: relative;
   overflow: hidden;
+
   transition: var(--el-transition-duration-fast);
+}
+.avatar {
+  width: 160px;
+  height: 160px;
 }
 
 .avatar-uploader .el-upload:hover {
@@ -161,8 +131,8 @@ watch(
 .el-icon.avatar-uploader-icon {
   font-size: 28px;
   color: #8c939d;
-  width: 178px;
-  height: 178px;
+  width: 130px;
+  height: 130px;
   text-align: center;
 }
 </style>

@@ -6,7 +6,7 @@
 
 <script setup>
 import screenfull from 'screenfull'
-import { onBeforeMount, onMounted, ref } from 'vue'
+import { ref, onMounted, onBeforeMount } from 'vue'
 
 const icon = ref(screenfull.isFullscreen)
 const handleFullScreen = () => {

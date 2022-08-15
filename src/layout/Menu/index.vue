@@ -42,13 +42,22 @@ import { menuList } from '@/api/menu'
 import { ref } from 'vue'
 import variables from '@/styles/variables.scss'
 
-const iconList = ref(['user', 'setting', 'shop', 'tickets', 'pie-chart'])
+const iconList = ref([
+  'user',
+  'setting',
+  'shop',
+  'tickets',
+  'pie-chart',
+  'tickets'
+])
 const icon = ref('menu')
 
 const defaultActive = ref(sessionStorage.getItem('path') || '/users')
 const menusList = ref([])
+
 const initMenusList = async () => {
-  const res = await menuList()
+  const ppp = localStorage.getItem('positions')
+  const res = await menuList(ppp)
   console.log(res.menu)
   menusList.value = res.menu
 }

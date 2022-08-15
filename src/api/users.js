@@ -30,3 +30,11 @@ export const UserDeleteById = (id) => {
     method: 'DELETE'
   })
 }
+
+export const UserFind = (body) => {
+  return request({
+    url: '/zhsx/user/find',
+    method: 'POST',
+    data: body
+  })
+}

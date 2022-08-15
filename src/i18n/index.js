@@ -1,7 +1,6 @@
 import { createI18n } from 'vue-i18n'
 import EN from './en'
 import ZH from './zh'
-
 const messages = {
   en: {
     ...EN

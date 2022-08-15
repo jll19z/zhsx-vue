@@ -14,36 +14,42 @@
       :size="formSize"
       status-icon
     >
-      <el-form-item label="用户名" prop="username">
-        <el-input v-model="ruleForm.username" />
+      <el-form-item label="商品名称" prop="productName">
+        <el-input v-model="ruleForm.productName" />
       </el-form-item>
-      <el-form-item label="密码" prop="password">
-        <el-input v-model="ruleForm.password" />
+      <el-form-item label="商品价格" prop="productPrice">
+        <el-input v-model="ruleForm.productPrice" />
       </el-form-item>
-      <el-form-item label="头像" prop="avatar">
+      <el-form-item label="优惠价格" prop="productPriceNow">
+        <el-input v-model="ruleForm.productPriceNow" />
+      </el-form-item>
+
+      <el-form-item label="商品类型" prop="tabType">
+        <el-select v-model="ruleForm.tabType" class="m-2" placeholder="Select">
+          <el-option
+            v-for="item in tabList"
+            :key="item.tabType"
+            :label="item.tabTypename"
+            :value="item.tabType"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="图片" prop="avatar">
         <el-upload
           class="avatar-uploader"
           action="http://localhost:9090/fileoss/upload"
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
         >
-          <img v-if="imageUrl" :src="imageUrl" />
+          <img v-if="imageUrl" :src="imageUrl" class="avatar" />
           <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
         </el-upload>
       </el-form-item>
-      <el-form-item label="权限" prop="positions">
-        <el-select
-          v-model="ruleForm.positions"
-          class="m-2"
-          placeholder="Select"
-        >
-          <el-option
-            v-for="item in SelectList"
-            :key="item.id"
-            :label="item.positionName"
-            :value="item.id"
-          />
-        </el-select>
+      <el-form-item label="商品描述" prop="productDescription">
+        <el-input v-model="ruleForm.productDescription"></el-input>
+      </el-form-item>
+      <el-form-item label="商品库存" prop="productStock">
+        <el-input v-model="ruleForm.productStock"></el-input>
       </el-form-item>
     </el-form>
     <template #footer>
@@ -57,20 +63,21 @@
 
 <script setup>
 import { defineEmits, ref, defineProps, watch, toRaw } from 'vue'
-import { positionList } from '@/api/UserPositon'
-import { AddUser, UserUpdateById } from '@/api/users'
-
-const emits = defineEmits(['update:modelValue', 'initGetUser'])
+import { getProductTab } from '@/api/productTab'
+import { AddProduct, UpdateProductById } from '@/api/productinfo'
+const emits = defineEmits(['update:modelValue', 'initGetProduct'])
 const ruleFormRef = ref(null)
+const imageUrl = ref('')
+const tabList = ref([])
 const ruleForm = ref({
-  id: '',
-  username: '',
-  password: '',
-  avatar: '',
-  positions: ''
+  productName: '',
+  productPrice: '',
+  productPriceNow: '',
+  tabType: '',
+  productStock: '',
+  productDescription: '',
+  productImg: ''
 })
-
-const saveOrUpdate = ref('0')
 
 const props = defineProps({
   dialogTitle: {
@@ -90,59 +97,49 @@ const handleClose = () => {
   imageUrl.value = '' // 上传的图片在取消添加后清除
   emits('update:modelValue', false)
 }
-// 获取职位列表 渲染在select选择器
-const SelectList = ref({})
-const getPositionList = async () => {
-  const res = await positionList()
-  // console.log(res.plist)
-  SelectList.value = res.plist
-}
-getPositionList()
-// 定义图片回显变量imageUrl 图片上传成功 回显图片
-const imageUrl = ref('')
 // 上传图片成功回调函数
 const handleAvatarSuccess = (res) => {
   // console.log(res.data.url)
   imageUrl.value = res.data.url
-  ruleForm.value.avatar = res.data.url
+  ruleForm.value.productImg = res.data.url
 }
 
 const handleOk = async () => {
   console.log(ruleForm)
-  if (ruleForm.value.id) {
+  if (ruleForm.value.productId) {
     console.log('update')
     // console.log(ruleForm.value.positions)
-    await UserUpdateById(ruleForm.value)
+    await UpdateProductById(ruleForm.value)
   } else {
     console.log('add')
-    await AddUser(ruleForm.value)
+    await AddProduct(ruleForm.value)
   }
-
+  console.log('----5555555555555')
+  emits('initGetProduct')
+  console.log('----5555555555555')
   handleClose()
-  emits('initGetUser')
 }
+// 获取分类列表 渲染到查询的选择器上
+const getProductTabList = async () => {
+  const res = await getProductTab()
+  tabList.value = res.tablist
+  console.log(res.tablist)
+}
+getProductTabList()
 
 watch(
   () => props.dialogTableValue,
   () => {
     const ValueObj = toRaw(props.dialogTableValue)
-    imageUrl.value = ValueObj.avatar
-    saveOrUpdate.value = 1
+    console.log('ValueObj')
+    console.log(ValueObj)
+    imageUrl.value = ValueObj.productImg
     ruleForm.value = props.dialogTableValue
-    console.log('-------------')
     console.log(ruleForm.value)
-    console.log('-------------')
   },
   { deep: true, immediate: true }
 )
 </script>
-<style scoped>
-.avatar-uploader .avatar {
-  width: 178px;
-  height: 178px;
-  display: block;
-}
-</style>
 
 <style>
 .avatar-uploader .el-upload {
@@ -161,8 +158,8 @@ watch(
 .el-icon.avatar-uploader-icon {
   font-size: 28px;
   color: #8c939d;
-  width: 178px;
-  height: 178px;
+  width: 130px;
+  height: 130px;
   text-align: center;
 }
 </style>

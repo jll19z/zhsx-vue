@@ -12,9 +12,8 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { watch, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-
 const route = useRoute()
 const router = useRouter()
 

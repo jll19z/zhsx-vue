@@ -1,7 +1,7 @@
 import request from './request'
 
-export const menuList = () => {
+export const menuList = (id) => {
   return request({
-    url: '/zhsx/vue-menu'
+    url: `/zhsx/vue-menu/${id}`
   })
 }
